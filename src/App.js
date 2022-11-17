@@ -1,9 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+
+import "./App.css"
 
 const App = () => {
      const baseURL = "http://localhost:9002/api";
    
-     const [getResult, setGetResult] = useState(null);
+     const [getResult, setGetResult] = useState(false);
+
+    const [info , setInfo] = useState(null)
+
+     const getDATa = async() => {
+
+      const res = await fetch(`${baseURL}/texts`);
+      const baseData = await res.json()
+      console.log(baseData.data)
+
+      setInfo(baseData.data)
+      
+
+     }
+
+     useEffect( () => {
+
+getDATa()
+
+
+     }, [])
+
+     const handleApi = () => {
+
+      setGetResult(true)
+     }
+
+     
+
+
+
    
      const fortmatResponse = (res) => {
        return JSON.stringify(res, null, 2);
@@ -19,6 +52,8 @@ const App = () => {
          }
    
          const data = await res.json();
+
+         console.log(data);
    
          const result = {
            status: res.status + "-" + res.statusText,
@@ -38,16 +73,45 @@ const App = () => {
 
 return (
 
-   <div className="card">
+
+
+<div className=""> 
+
+<div className="card">
       <div className="card-header">TALENT PLUS MICROSERVICES</div>
       <div className="card-body">
         <div className="input-group input-group-sm">
-          <button className="btn btn-sm btn-primary" onClick={getAllData}>Get TALENT PLUS</button>
+          <button className="btn btn-sm btn-primary" onClick={handleApi}>Get TALENT PLUS</button>
 
         { getResult && <div className="alert alert-secondary mt-2" role="alert"><pre>{getResult}</pre></div> }
       </div>
+
+   
     </div>
     </div> 
+
+
+    <>
+    
+    {getResult  &&   <>   <div  className="centerInfo">
+   
+   {info ? 
+   
+   <div>
+     {info.map( item => (
+        <h1> {item.title}</h1>
+     ))}
+</div> 
+
+: <h1>  is loading </h1>}
+
+</div> </>}
+    </>
+
+
+
+
+</div>
 
    );
 };
